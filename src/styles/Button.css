@@ -1,0 +1,7 @@
+.button {
+  /* background: red; */
+  width: fit-content;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+}
