@@ -6,20 +6,23 @@ import Card from "./Card";
 
 export default function List(props: any) {
   const [selectedObject, setSelectedObject] = useState({
+    id: 0,
     name: "",
     desc: "",
-    type: "",
+    type: "person",
   });
   const [showCard, setShowCard] = useState<Boolean>(false);
   const [objects, setObjects] = useState([]);
+  // const [filtered, setFiltered] = useState([]);
 
-  console.log("props.filtered");
-  console.log(props.filtered);
-  const [filtered, setFiltered] = useState([]);
+  // useEffect(() => {
+  //   console.log(selectedObject);
+  // }, [selectedObject]);
 
-  useEffect(() => {
-    console.log(selectedObject);
-  }, [selectedObject]);
+  // useEffect(() => {
+  //   setShowCard(showCard);
+  //   console.log(showCard);
+  // }, [showCard]);
 
   useEffect(() => {
     setObjects(JSON.parse(localStorage.getItem("objects") || "[]"));
@@ -27,17 +30,27 @@ export default function List(props: any) {
 
   const getDataFromChild = (data: any) => {
     setObjects(data);
-    console.log("data from card: " + JSON.stringify(data));
+    console.log(data);
+    console.log(showCard);
+    // console.log("data from card: " + JSON.stringify(data));
   };
 
+  // const getShowCard = (data: any) => {
+  //   console.log(data);
+  //   // setShowCard(data)
+  // };
+
   const onAdd = () => {
+    // console.log("add obj");
     setSelectedObject({
+      id: 0,
       name: "",
       desc: "",
-      type: "",
+      type: "person",
     });
     setShowCard(true);
-    console.log("add obj");
+
+    // console.log(selectedObject);
   };
 
   return (
@@ -53,8 +66,9 @@ export default function List(props: any) {
         </div>
       </div>
 
-      {(props.filtered.length > 0 ? props.filtered : objects).map(
-        (item: any, index: number) => {
+      {(props.filtered.length > 0 ? props.filtered : objects)
+        .sort((a: any, b: any) => (a.id > b.id ? 1 : -1))
+        .map((item: any, index: number) => {
           return (
             <div
               className="list"
@@ -79,12 +93,13 @@ export default function List(props: any) {
             </div> */}
             </div>
           );
-        }
-      )}
+        })}
       {showCard && (
         // <div className="card-container">
         <Card
+          showCard={showCard}
           func={getDataFromChild}
+          id={selectedObject.id}
           name={selectedObject.name}
           desc={selectedObject.desc}
           type={selectedObject.type}

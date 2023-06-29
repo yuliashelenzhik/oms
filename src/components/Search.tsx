@@ -19,13 +19,13 @@ export default function Search(props: any) {
           item?.name?.toLowerCase().includes(e.target.value) ||
           item?.desc?.toLowerCase().includes(e.target.value)
       );
+      // console.log(filterResult);
       setFiltered(filterResult);
     } else {
+      //- [ ] SEARCH -when nothing found - show nothing, before typing - and when nothing is in input - show everythin
       setFiltered(objects);
     }
   };
-
-  console.log(filtered);
 
   return (
     <div className="search-container">

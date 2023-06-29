@@ -3,35 +3,64 @@ import "../styles/Card.css";
 import Button from "./Button";
 
 type CardProps = {
+  id: number;
   name?: string;
   desc?: string;
   type?: string;
-  showCard?: boolean;
+  showCard?: any;
   func?: any;
   equipment?: Array<string>;
   people?: Array<string>;
+  assigned?: Array<any>;
+  assignedTo?: Array<any>;
 };
 
-interface Card {
-  name: string;
-  desc: string;
-  type: string;
-  showCard?: boolean;
-  equipment?: Array<string>;
-  people?: Array<string>;
-}
-
 export default function Card(props: CardProps) {
-  const [showCard, setShowCard] = useState<Boolean>(true);
+  const [showCard, setShowCard] = useState<Boolean>(props.showCard);
   const [name, setName] = useState<any>(props.name ?? "");
+  const [id, setId] = useState<any>(props.id ?? 0);
   const [description, setDescription] = useState<any>(props.desc ?? "");
-  const [type, setType] = useState<any>(props.type ?? "");
+  const [type, setType] = useState<any>(props.type ?? "person");
   const [objects, setObjects] = useState(
     JSON.parse(localStorage.getItem("objects") || "[]")
   );
+  const [equipment, setEquipment] = useState(
+    JSON.parse(localStorage.getItem("objects") || "[]").filter(
+      (item: any) => item.type !== "person"
+    )
+  );
+  const [people, setPeople] = useState(
+    JSON.parse(localStorage.getItem("objects") || "[]").filter(
+      (item: any) => item.type === "person"
+    )
+  );
+  const [assigned, setAssigned] = useState([]);
+  // const [assigned, setAssigned] = useState(
+  //   equipment.map((item: any) => ({ ...item, checked: false }))
+  // );
+
+  // const [assigned, setAssigned] = useState(
+  //   new Array(equipment.length).fill({ checked: false })
+  // );
+
+  // const equipmentOptions = equipment.map((item: any) => {
+  //   return item.name;
+  // });
+
+  // console.log(equipmentOptions);
   //   const [name, setName] = useState('');
 
-  useEffect(() => {}, [objects]);
+  // useEffect(() => {}, [objects]);
+
+  useEffect(() => {
+    console.log(props);
+    setShowCard(props.showCard);
+    // console.log(props.showCard);
+  }, [props.showCard]);
+
+  useEffect(() => {
+    console.log(assigned);
+  }, [onCheckEquipment]);
 
   const typeOptions = ["person", "computer", "desk", "keyboard"];
 
@@ -44,34 +73,96 @@ export default function Card(props: CardProps) {
   };
 
   const onChangeType = (e: any) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setType(e.target.value);
   };
 
-  const onSave = () => {
-    // if (exists) {update}
-    console.log(name, description, type);
+  // const onAssign = () => {
+  //   console.log(equipment);
+  // };
+
+  const onDelete = () => {
     let res = objects;
-    // let existingObjects = JSON.parse(localStorage.getItem("objects") || "[]");
-    const itemToSave = {
-      name: name,
-      desc: description,
-      type: type,
-    };
-    console.log(itemToSave);
-    if (name !== "") {
-      res.push(itemToSave);
+    const foundObject = res.filter(
+      (item: any) => item.id === id && item.name === name
+    );
+    if (foundObject.length > 0) {
+      res.splice(res.indexOf(foundObject[0]), 1);
       setObjects(res);
       localStorage.setItem("objects", JSON.stringify(res));
-      //TODO rerender parent
       props.func(objects);
       setShowCard(false);
-    } else {
-      //TODO let users know the name is required
+
+      // props.showCard(false);
     }
   };
 
+  const onSave = () => {
+    let res = objects;
+    const foundObject = res.filter(
+      (item: any) => item.id === id && item.name === name
+    );
+
+    //UPDATE THE EXISTING OBJECT
+
+    if (foundObject.length > 0) {
+      const itemToSave = {
+        id: foundObject[0].id,
+        name: name,
+        desc: description,
+        type: type,
+        // assigned: assigned
+      };
+      res.splice(res.indexOf(foundObject[0]), 1);
+
+      if (name !== "") {
+        res.push(itemToSave);
+        setObjects(res);
+        localStorage.setItem("objects", JSON.stringify(res));
+        props.func(objects);
+        setShowCard(false);
+        // props.showCard(false);
+      } else {
+        //TODO let users know the name is required
+      }
+    } else {
+      // ADD NEW OBJECT
+      const ids = objects.map((item: any) => {
+        return item.id;
+      });
+      const max = Math.max(...ids);
+      const itemToSave = {
+        id: max + 1,
+        name: name,
+        desc: description,
+        type: type,
+        assigned: assigned,
+      };
+      if (name !== "") {
+        res.push(itemToSave);
+        setObjects(res);
+        localStorage.setItem("objects", JSON.stringify(res));
+        props.func(objects);
+        setShowCard(false);
+        // props.showCard(false);
+      } else {
+        //TODO let users know the name is required
+      }
+    }
+  };
+
+  function onCheckEquipment(position: any) {
+    let res = [];
+    // console.log()
+    // const updateAssigned = assigned.map((item: any, index: any) => {
+    //   return index === position ? !item : item;
+    // });
+    // // console.log(updateAssigned);
+    // setAssigned(updateAssigned);
+  }
+
   const closeCard = () => {
+    //TOFIX
     setShowCard(false);
   };
 
@@ -96,22 +187,74 @@ export default function Card(props: CardProps) {
             />
           </div>
           <div>
-            <select onChange={onChangeType}>
-              {typeOptions.map((item) => {
+            <select
+              onChange={onChangeType}
+              className="type-select"
+              defaultValue={type}
+            >
+              {typeOptions.map((item, index) => {
                 return (
-                  <option value={item} key={item}>
+                  <option className="typeOption" value={item} key={index}>
                     {item}
                   </option>
                 );
               })}
             </select>
-            {/* <input type="text" placeholder="Type" /> */}
           </div>
-          <div>
-            <input type="text" placeholder="Connections" />
-          </div>
+
+          {type === "person" ? (
+            <div className="relations">
+              <p>Assigned</p>
+              <div className="checkbox-container">
+                {equipment.map((item: any, index: number) => {
+                  return (
+                    <div key={item.id}>
+                      <input
+                        type="checkbox"
+                        name=""
+                        id=""
+                        onChange={() => onCheckEquipment(item.checked)}
+                      />
+                      <span>{item.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="relations">
+              <p>Assigned to</p>
+              <div className="checkbox-container">
+                {people.map((item: any) => {
+                  return (
+                    <div key={item.id}>
+                      <input type="checkbox" name="" id="" value={item} />
+                      <span>{item.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* <select
+              onChange={onAssign}
+              multiple={true}
+              className="relations-select"
+            >
+              {equipment.map((item: any, index: any) => {
+                return (
+                  <option value={item.id} key={index}>
+                    {item.name}
+                  </option>
+                );
+              })}
+            </select> */}
+          {/* <input type="text" placeholder="Connections" /> */}
+          {/* </div> */}
           <div className="card-btn-container">
             <Button title="Save" onClick={onSave} />
+            <Button title="Delete" onClick={onDelete} />
           </div>
         </div>
       </div>
