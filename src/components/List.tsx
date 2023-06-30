@@ -3,6 +3,7 @@ import { ReactComponent as AddIcon } from "../icons/plus-circle.svg";
 import { ReactComponent as EditIcon } from "../icons/edit-2.svg";
 import { ReactComponent as DeleteIcon } from "../icons/trash-2.svg";
 import Card from "./Card";
+import "../styles/List.css";
 
 export default function List(props: any) {
   const [selectedObject, setSelectedObject] = useState({
@@ -13,16 +14,6 @@ export default function List(props: any) {
   });
   const [showCard, setShowCard] = useState<Boolean>(false);
   const [objects, setObjects] = useState([]);
-  // const [filtered, setFiltered] = useState([]);
-
-  // useEffect(() => {
-  //   console.log(selectedObject);
-  // }, [selectedObject]);
-
-  // useEffect(() => {
-  //   setShowCard(showCard);
-  //   console.log(showCard);
-  // }, [showCard]);
 
   useEffect(() => {
     setObjects(JSON.parse(localStorage.getItem("objects") || "[]"));
@@ -30,18 +21,10 @@ export default function List(props: any) {
 
   const getDataFromChild = (data: any) => {
     setObjects(data);
-    console.log(data);
-    console.log(showCard);
-    // console.log("data from card: " + JSON.stringify(data));
+    // console.log(showCard);
   };
 
-  // const getShowCard = (data: any) => {
-  //   console.log(data);
-  //   // setShowCard(data)
-  // };
-
   const onAdd = () => {
-    // console.log("add obj");
     setSelectedObject({
       id: 0,
       name: "",
@@ -49,8 +32,6 @@ export default function List(props: any) {
       type: "person",
     });
     setShowCard(true);
-
-    // console.log(selectedObject);
   };
 
   return (
@@ -76,6 +57,8 @@ export default function List(props: any) {
               onClick={() => {
                 setSelectedObject(item);
                 setShowCard(true);
+                console.log("onclick");
+                console.log(showCard);
               }}
             >
               <div className="list-item-details">

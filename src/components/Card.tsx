@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../styles/Card.css";
 import Button from "./Button";
+import ConfirmModal from "./ConfirmModal";
 
 type CardProps = {
   id: number;
@@ -34,7 +35,12 @@ export default function Card(props: CardProps) {
       (item: any) => item.type === "person"
     )
   );
-  const [assigned, setAssigned] = useState([]);
+  const [assigned, setAssigned] = useState(props.assigned ?? []);
+  const [showConfirm, setShowConfirm] = useState(false);
+  // useEffect(() => {
+  //   console.log("card props");
+  //   console.log(props);
+  // }, [props, showCard]);
   // const [assigned, setAssigned] = useState(
   //   equipment.map((item: any) => ({ ...item, checked: false }))
   // );
@@ -47,20 +53,14 @@ export default function Card(props: CardProps) {
   //   return item.name;
   // });
 
-  // console.log(equipmentOptions);
-  //   const [name, setName] = useState('');
-
-  // useEffect(() => {}, [objects]);
-
   useEffect(() => {
-    console.log(props);
+    // console.log(props);
     setShowCard(props.showCard);
-    // console.log(props.showCard);
   }, [props.showCard]);
 
-  useEffect(() => {
-    console.log(assigned);
-  }, [onCheckEquipment]);
+  // useEffect(() => {
+  //   console.log(assigned);
+  // }, [assigned]);
 
   const typeOptions = ["person", "computer", "desk", "keyboard"];
 
@@ -73,15 +73,29 @@ export default function Card(props: CardProps) {
   };
 
   const onChangeType = (e: any) => {
-    // console.log(e.target.value);
     setType(e.target.value);
   };
 
-  // const onAssign = () => {
-  //   console.log(equipment);
-  // };
+  const onChangeAssigned = (data: any) => {
+    let res = assigned;
+    if (assigned.indexOf(data as never) < 0) {
+      res.push(data as never);
+    } else {
+      res.splice(res.indexOf(data as never), 1);
+    }
+    setAssigned(res);
+    console.log(res);
+    for (let item in res) {
+      console.log(res[item]);
+    }
+    //search all quipment by id, add to each array of people assigned
+  };
 
   const onDelete = () => {
+    setShowConfirm(true);
+  };
+
+  const onConfirm = () => {
     let res = objects;
     const foundObject = res.filter(
       (item: any) => item.id === id && item.name === name
@@ -92,11 +106,9 @@ export default function Card(props: CardProps) {
       localStorage.setItem("objects", JSON.stringify(res));
       props.func(objects);
       setShowCard(false);
-
-      // props.showCard(false);
+      setShowConfirm(false);
     }
   };
-
   const onSave = () => {
     let res = objects;
     const foundObject = res.filter(
@@ -111,7 +123,7 @@ export default function Card(props: CardProps) {
         name: name,
         desc: description,
         type: type,
-        // assigned: assigned
+        assigned: assigned,
       };
       res.splice(res.indexOf(foundObject[0]), 1);
 
@@ -151,19 +163,22 @@ export default function Card(props: CardProps) {
     }
   };
 
-  function onCheckEquipment(position: any) {
-    let res = [];
-    // console.log()
-    // const updateAssigned = assigned.map((item: any, index: any) => {
-    //   return index === position ? !item : item;
-    // });
-    // // console.log(updateAssigned);
-    // setAssigned(updateAssigned);
-  }
+  // function onCheckEquipment(position: any) {
+  //   let res = [];
+  //   // console.log()
+  //   // const updateAssigned = assigned.map((item: any, index: any) => {
+  //   //   return index === position ? !item : item;
+  //   // });
+  //   // // console.log(updateAssigned);
+  //   // setAssigned(updateAssigned);
+  // }
 
   const closeCard = () => {
     //TOFIX
     setShowCard(false);
+    // console.log("showCard");
+    // console.log(showCard);
+    // props.showCard(false);
   };
 
   if (showCard) {
@@ -207,13 +222,20 @@ export default function Card(props: CardProps) {
               <p>Assigned</p>
               <div className="checkbox-container">
                 {equipment.map((item: any, index: number) => {
+                  const assignedToSelectedObject = objects.find(
+                    (item: any) => item.id === props.id
+                  ).assigned;
                   return (
                     <div key={item.id}>
                       <input
                         type="checkbox"
-                        name=""
-                        id=""
-                        onChange={() => onCheckEquipment(item.checked)}
+                        defaultChecked={
+                          assignedToSelectedObject !== undefined &&
+                          assignedToSelectedObject.some(
+                            (e: any) => e.id === item.id
+                          )
+                        }
+                        onChange={() => onChangeAssigned(item)}
                       />
                       <span>{item.name}</span>
                     </div>
@@ -226,6 +248,11 @@ export default function Card(props: CardProps) {
               <p>Assigned to</p>
               <div className="checkbox-container">
                 {people.map((item: any) => {
+                  console.log(item);
+                  const find = objects.find(
+                    (item: any) => item.id === props.id
+                  ).assigned;
+                  console.log(find);
                   return (
                     <div key={item.id}>
                       <input type="checkbox" name="" id="" value={item} />
@@ -237,26 +264,18 @@ export default function Card(props: CardProps) {
             </div>
           )}
 
-          {/* <select
-              onChange={onAssign}
-              multiple={true}
-              className="relations-select"
-            >
-              {equipment.map((item: any, index: any) => {
-                return (
-                  <option value={item.id} key={index}>
-                    {item.name}
-                  </option>
-                );
-              })}
-            </select> */}
-          {/* <input type="text" placeholder="Connections" /> */}
-          {/* </div> */}
           <div className="card-btn-container">
             <Button title="Save" onClick={onSave} />
             <Button title="Delete" onClick={onDelete} />
           </div>
         </div>
+        {showConfirm && (
+          <ConfirmModal
+            object={{ name: name, id: id }}
+            onClick={(e: any) => e.stopPropagation()}
+            onConfirm={onConfirm}
+          />
+        )}
       </div>
     );
   } else return <div></div>;
