@@ -66,3 +66,15 @@ nav {
   cursor: pointer;
   border-radius: 50px;
 }
+.ligth-dark-mode > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ligth-dark-mode > .light > svg {
+  stroke: #291847;
+}
+.ligth-dark-mode > .dark > svg {
+  stroke: "#e7cecd";
+}

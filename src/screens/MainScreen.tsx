@@ -3,22 +3,27 @@ import Card from "../components/Card";
 import List from "../components/List";
 import Navbar from "../components/Navbar";
 import { useContext } from "react";
-import { ThemeContext } from "../contexts/ThemeContext";
+import { ThemeContext, ThemeContextType } from "../contexts/ThemeContext";
 
 export default function MainScreen() {
   // const { theme } = useContext(ThemeContext);
   // console.log(theme);
+  const { theme } = useContext<ThemeContextType>(ThemeContext);
   const [filtered, setFiltered] = useState([]);
 
   const getFiltered = (data: any) => {
     setFiltered(data);
   };
-
+  // const styles = {
+  //   backgroundImage: theme === "dark" ? "var(--bgPrimary)" : "var(--bgPrimary)",
+  //   color: theme === "dark" ? "var(--textPrimary)" : "var(--textPrimary)",
+  // };
+  const styles = {
+    backgroundImage: "var(--bgPrimary)",
+    color: "var(--textPrimary)",
+  };
   return (
-    <div
-      className="main-screen"
-      // style={{ backgroundColor: theme?.primary }}
-    >
+    <div className="main-screen" style={styles}>
       <Navbar func={getFiltered} />
       <List filtered={filtered} />
       {/* {showCard && <Card />} */}
