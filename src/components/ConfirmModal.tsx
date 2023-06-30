@@ -6,6 +6,7 @@ type ConfirmModalProps = {
   object: {
     name: string;
     id: number;
+    assigned?: {}[];
   };
   onClick?: any;
   onConfirm?: any;

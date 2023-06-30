@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "../styles/Card.css";
 import Button from "./Button";
 import ConfirmModal from "./ConfirmModal";
+import { ModalContext, ModalData } from "../contexts/CardContext";
 
 type CardProps = {
   id: number;
@@ -17,7 +18,7 @@ type CardProps = {
 };
 
 export default function Card(props: CardProps) {
-  const [showCard, setShowCard] = useState<Boolean>(props.showCard);
+  // const [showCard, setShowCard] = useState<Boolean>(props.showCard);
   const [name, setName] = useState<any>(props.name ?? "");
   const [id, setId] = useState<any>(props.id ?? 0);
   const [description, setDescription] = useState<any>(props.desc ?? "");
@@ -37,6 +38,8 @@ export default function Card(props: CardProps) {
   );
   const [assigned, setAssigned] = useState(props.assigned ?? []);
   const [showConfirm, setShowConfirm] = useState(false);
+  const { hideModal, modalData } = useContext(ModalContext);
+
   // useEffect(() => {
   //   console.log("card props");
   //   console.log(props);
@@ -53,10 +56,10 @@ export default function Card(props: CardProps) {
   //   return item.name;
   // });
 
-  useEffect(() => {
-    // console.log(props);
-    setShowCard(props.showCard);
-  }, [props.showCard]);
+  // useEffect(() => {
+  //   // console.log(props);
+  //   setShowCard(props.showCard);
+  // }, [props.showCard]);
 
   // useEffect(() => {
   //   console.log(assigned);
@@ -105,8 +108,9 @@ export default function Card(props: CardProps) {
       setObjects(res);
       localStorage.setItem("objects", JSON.stringify(res));
       props.func(objects);
-      setShowCard(false);
+      // setShowCard(false);
       setShowConfirm(false);
+      hideModal();
     }
   };
   const onSave = () => {
@@ -115,7 +119,7 @@ export default function Card(props: CardProps) {
       (item: any) => item.id === id && item.name === name
     );
 
-    //UPDATE THE EXISTING OBJECT
+    //Update the existing object
 
     if (foundObject.length > 0) {
       const itemToSave = {
@@ -123,7 +127,7 @@ export default function Card(props: CardProps) {
         name: name,
         desc: description,
         type: type,
-        assigned: assigned,
+        // assigned: assigned,
       };
       res.splice(res.indexOf(foundObject[0]), 1);
 
@@ -132,13 +136,14 @@ export default function Card(props: CardProps) {
         setObjects(res);
         localStorage.setItem("objects", JSON.stringify(res));
         props.func(objects);
-        setShowCard(false);
+        // setShowCard(false);
         // props.showCard(false);
       } else {
         //TODO let users know the name is required
       }
     } else {
-      // ADD NEW OBJECT
+      // Add new object
+
       const ids = objects.map((item: any) => {
         return item.id;
       });
@@ -148,14 +153,15 @@ export default function Card(props: CardProps) {
         name: name,
         desc: description,
         type: type,
-        assigned: assigned,
+        // assigned: assigned,
       };
       if (name !== "") {
         res.push(itemToSave);
         setObjects(res);
         localStorage.setItem("objects", JSON.stringify(res));
         props.func(objects);
-        setShowCard(false);
+        hideModal();
+        // setShowCard(false);
         // props.showCard(false);
       } else {
         //TODO let users know the name is required
@@ -173,17 +179,9 @@ export default function Card(props: CardProps) {
   //   // setAssigned(updateAssigned);
   // }
 
-  const closeCard = () => {
-    //TOFIX
-    setShowCard(false);
-    // console.log("showCard");
-    // console.log(showCard);
-    // props.showCard(false);
-  };
-
-  if (showCard) {
+  if (modalData) {
     return (
-      <div className="card-background" onClick={closeCard}>
+      <div className="card-background" onClick={hideModal}>
         <div className="card" onClick={(e) => e.stopPropagation()}>
           <div>
             <input
@@ -224,7 +222,7 @@ export default function Card(props: CardProps) {
                 {equipment.map((item: any, index: number) => {
                   const assignedToSelectedObject = objects.find(
                     (item: any) => item.id === props.id
-                  ).assigned;
+                  )?.assigned;
                   return (
                     <div key={item.id}>
                       <input
@@ -246,7 +244,7 @@ export default function Card(props: CardProps) {
           ) : (
             <div className="relations">
               <p>Assigned to</p>
-              <div className="checkbox-container">
+              {/* <div className="checkbox-container">
                 {people.map((item: any) => {
                   console.log(item);
                   const find = objects.find(
@@ -260,7 +258,7 @@ export default function Card(props: CardProps) {
                     </div>
                   );
                 })}
-              </div>
+              </div> */}
             </div>
           )}
 
@@ -271,7 +269,8 @@ export default function Card(props: CardProps) {
         </div>
         {showConfirm && (
           <ConfirmModal
-            object={{ name: name, id: id }}
+            // object={props.}
+            object={{ name: name, id: id, assigned: assigned }}
             onClick={(e: any) => e.stopPropagation()}
             onConfirm={onConfirm}
           />
