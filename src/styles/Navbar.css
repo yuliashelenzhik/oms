@@ -3,6 +3,7 @@ nav {
   top: 0;
   right: 0;
   padding: 48px;
+  padding-left: 72px;
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -13,7 +14,6 @@ nav {
 .search-container {
   align-items: center;
   width: 100%;
-  /* min-width: 100px; */
   display: flex;
   justify-content: center;
   margin-right: 24px;

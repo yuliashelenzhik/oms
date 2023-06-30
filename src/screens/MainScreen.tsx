@@ -6,9 +6,7 @@ import { useContext } from "react";
 import { ThemeContext, ThemeContextType } from "../contexts/ThemeContext";
 
 export default function MainScreen() {
-  // const { theme } = useContext(ThemeContext);
-  // console.log(theme);
-  const { theme } = useContext<ThemeContextType>(ThemeContext);
+  const { theme, colors } = useContext<ThemeContextType>(ThemeContext);
   const [filtered, setFiltered] = useState([]);
 
   const getFiltered = (data: any) => {
@@ -18,10 +16,14 @@ export default function MainScreen() {
   //   backgroundImage: theme === "dark" ? "var(--bgPrimary)" : "var(--bgPrimary)",
   //   color: theme === "dark" ? "var(--textPrimary)" : "var(--textPrimary)",
   // };
+  // const styles = {
+  //   backgroundImage: "var(--bgPrimary)",
+  //   color: "var(--textPrimary)",
+  // };
   const styles = {
-    backgroundImage: "var(--bgPrimary)",
-    color: "var(--textPrimary)",
+    backgroundImage: colors.bgPrimary,
   };
+
   return (
     <div className="main-screen" style={styles}>
       <Navbar func={getFiltered} />
