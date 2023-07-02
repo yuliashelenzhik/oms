@@ -8,19 +8,10 @@ import { ThemeContext } from "../contexts/ThemeContext";
 export type AssignedObject = {
   id: number;
   name: string;
+  desc?: string;
+  type?: string;
+  assigned?: string[];
 };
-
-// type CardProps = {
-//   id?: number;
-//   name?: string;
-//   desc?: string;
-//   type?: string;
-//   func?: any;
-//   equipment?: string[];
-//   people?: string[];
-//   assigned?: AssignedObject[];
-//   assignedTo?: AssignedObject[];
-// };
 
 export default function Card(props: ModalData) {
   const { theme } = useContext(ThemeContext);
@@ -47,9 +38,9 @@ export default function Card(props: ModalData) {
   const [assigned, setAssigned] = useState<AssignedObject[]>(
     props.assigned ?? []
   );
-  const [assignedTo, setAssignedTo] = useState<AssignedObject[]>(
-    props.assigned ?? []
-  );
+  // const [assignedTo, setAssignedTo] = useState<AssignedObject[]>(
+  //   props.assigned ?? []
+  // );
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
 
   const typeOptions = ["person", "computer", "desk", "keyboard"];
@@ -68,22 +59,17 @@ export default function Card(props: ModalData) {
 
   const onChangeAssigned = (data: AssignedObject) => {
     let res = assigned;
-
     const foundAssignedObjectIndex = assigned.findIndex(
       (item) => item.id === data.id
     );
 
     if (foundAssignedObjectIndex !== -1) {
       // Remove from assigned array
-      console.log("FOUND, TO REMOVE");
       res.splice(foundAssignedObjectIndex, 1);
-      console.log(res);
       setAssigned(res);
     } else {
       // Add to assigned array
-      console.log("NOT FOUND, TO ADD");
       res.push(data);
-      console.log(res);
       setAssigned(res);
     }
   };
@@ -95,9 +81,27 @@ export default function Card(props: ModalData) {
   const onConfirm = () => {
     let res = objects;
     const foundObject = res.filter(
-      (item: any) => item.id === id && item.name === name
+      (item: any) => item.id === id
+      // (item: any) => item.id === id && item.name === name
     );
+
+    //Remove object from all the assigned to people arrays
     if (foundObject.length > 0) {
+      for (let object in res) {
+        const foundAssignedIndex = res[object].assigned?.findIndex(
+          (obj: any) => obj.id === props.id
+        );
+
+        if (foundAssignedIndex !== -1) {
+          res[object].assigned?.splice(
+            res[object].assigned[foundAssignedIndex],
+            1
+          );
+          setObjects(res);
+          localStorage.setItem("objects", JSON.stringify(res));
+        }
+      }
+
       res.splice(res.indexOf(foundObject[0]), 1);
       setObjects(res);
       localStorage.setItem("objects", JSON.stringify(res));
@@ -107,9 +111,14 @@ export default function Card(props: ModalData) {
     }
   };
   const onSave = (e: any) => {
+    // TOFIX when saving, make sure that:
+    // 1) the object appears in a person YES
+    // 2) the person appears in an object NO
+
     //  TODO let users know the name is required
 
     let res = [...objects];
+
     const foundObjectIndex = res.findIndex((item) => item.id === id);
 
     if (foundObjectIndex === -1) {
@@ -119,7 +128,7 @@ export default function Card(props: ModalData) {
       });
       const max = Math.max(...ids);
       const itemToSave = {
-        id: max + 1,
+        id: ids.length > 0 ? max + 1 : 0,
         name: name,
         desc: desc,
         type: type,
@@ -127,6 +136,7 @@ export default function Card(props: ModalData) {
       };
       res.push(itemToSave);
       setObjects(res);
+
       localStorage.setItem("objects", JSON.stringify(res));
       props.func(objects);
       hideModal();
@@ -147,6 +157,44 @@ export default function Card(props: ModalData) {
       props.func(objects);
       hideModal();
     }
+
+    // Find the objects that have been changed by assignment, add relations to them
+
+    const objectToAdd = res.find((item) => item.id === id);
+    console.log(objectToAdd);
+
+    for (let item in assigned) {
+      const addToIndex = res.findIndex((i) => i.id === assigned[item].id);
+
+      let updatedAssigned = res[addToIndex].assigned ?? [];
+
+      //TODO if uncheck, remove from assigned
+
+      console.log("objectToAdd");
+      console.log(objectToAdd);
+      console.log(assigned);
+      console.log(updatedAssigned);
+
+      // if (updatedAssigned  )
+      //res[index of assigned item]
+
+      updatedAssigned.push(objectToAdd);
+
+      const changedItem = {
+        id: assigned[item].id,
+        name: assigned[item].name,
+        desc: assigned[item].desc,
+        type: assigned[item].type,
+        assigned: updatedAssigned,
+      };
+
+      res[addToIndex] = changedItem;
+      setObjects(res);
+      // props.func(objects);
+      localStorage.setItem("objects", JSON.stringify(res));
+      hideModal();
+    }
+    // push the person to the assigned of the quipment
   };
 
   if (modalData) {
@@ -205,7 +253,7 @@ export default function Card(props: ModalData) {
                         }
                         onChange={() => onChangeAssigned(item)}
                       />
-                      <span>{item.name}</span>
+                      <span>{item.name.toLowerCase()}</span>
                     </div>
                   );
                 })}
@@ -214,21 +262,27 @@ export default function Card(props: ModalData) {
           ) : (
             <div className="relations">
               <p>Assigned to</p>
-              {/* <div className="checkbox-container">
+              <div className="checkbox-container">
                 {people.map((item: any) => {
-                  console.log(item);
-                  const find = objects.find(
-                    (item: any) => item.id === props.id
-                  ).assigned;
-                  console.log(find);
+                  // console.log(item);
                   return (
                     <div key={item.id}>
-                      <input type="checkbox" name="" id="" value={item} />
-                      <span>{item.name}</span>
+                      <input
+                        type="checkbox"
+                        name=""
+                        id=""
+                        value={item}
+                        defaultChecked={
+                          item.assigned !== undefined &&
+                          item.assigned.some((i: any) => i.id === modalData.id)
+                        }
+                        onChange={() => onChangeAssigned(item)}
+                      />
+                      <span>{item.name.toLowerCase()}</span>
                     </div>
                   );
                 })}
-              </div> */}
+              </div>
             </div>
           )}
 

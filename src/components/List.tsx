@@ -12,6 +12,7 @@ import { ThemeContext, ThemeContextType } from "../contexts/ThemeContext";
 //   type: string;
 //   assigned: any[];
 // };
+
 export default function List(props: any) {
   const { theme, colors } = useContext<ThemeContextType>(ThemeContext);
   const [selectedObject, setSelectedObject] = useState<ModalData>({
@@ -35,10 +36,10 @@ export default function List(props: any) {
     showModal(data);
   };
 
-  useEffect(() => {
-    console.log("selectedObject");
-    console.log(selectedObject);
-  }, [selectedObject]);
+  // useEffect(() => {
+  //   console.log("selectedObject");
+  //   console.log(selectedObject);
+  // }, [selectedObject]);
   useEffect(() => {
     setObjects(JSON.parse(localStorage.getItem("objects") || "[]"));
   }, [modalData]);
@@ -58,7 +59,6 @@ export default function List(props: any) {
     showModal(selectedObject);
   };
 
-  console.log(modalData);
   return (
     <div className="list-container">
       <div
@@ -99,8 +99,8 @@ export default function List(props: any) {
                 style={{ color: colors.textPrimary }}
               >
                 <p>{item.name.toLowerCase()}</p>
-                <p>{item.desc.toLowerCase()}</p>
-                <p>{item.type.toLowerCase()}</p>
+                <p>{item.desc?.toLowerCase()}</p>
+                <p>{item.type?.toLowerCase()}</p>
               </div>
             </div>
           );
