@@ -5,16 +5,9 @@ import "../styles/List.css";
 import { ModalContext, ModalData } from "../contexts/CardContext";
 import { ThemeContext, ThemeContextType } from "../contexts/ThemeContext";
 
-// export type SelectedObject = {
-//   id: number | undefined;
-//   name: string;
-//   desc: string;
-//   type: string;
-//   assigned: any[];
-// };
-
 export type ListProps = {
   filtered: ModalData[];
+  noResult?: boolean;
 };
 
 export default function List(props: ListProps) {
@@ -40,10 +33,6 @@ export default function List(props: ListProps) {
     showModal(data);
   };
 
-  // useEffect(() => {
-  //   console.log("selectedObject");
-  //   console.log(selectedObject);
-  // }, [selectedObject]);
   useEffect(() => {
     setObjects(JSON.parse(localStorage.getItem("objects") || "[]"));
   }, [modalData]);
@@ -86,7 +75,7 @@ export default function List(props: ListProps) {
         </div>
       </div>
 
-      {(props.filtered.length > 0 ? props.filtered : objects)
+      {(props.filtered.length > 0 ? props.filtered : [])
         .sort((a: any, b: any) => (a.id > b.id ? 1 : -1))
         .map((item: any, index: number) => {
           return (

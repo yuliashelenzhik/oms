@@ -16,7 +16,7 @@ export default function Navbar(props: any) {
     <nav style={styles}>
       <h3>OMS</h3>
       <Search func={props.func} />
-      <div className="ligth-dark-mode" onClick={toggleTheme}>
+      <div className="light-dark-mode" onClick={toggleTheme}>
         {theme === "dark" ? (
           <div className="dark">
             <LightIcon />

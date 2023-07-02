@@ -48,7 +48,7 @@ nav {
   width: 24px;
 }
 
-.ligth-dark-mode {
+.light-dark-mode {
   background-color: var(--bg-transp);
   padding: 6px 24px;
   display: flex;
@@ -57,15 +57,15 @@ nav {
   cursor: pointer;
   border-radius: 50px;
 }
-.ligth-dark-mode > div {
+.light-dark-mode > div {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.ligth-dark-mode > .light > svg {
+.light-dark-mode > .light > svg {
   stroke: var(--dark);
 }
-.ligth-dark-mode > .dark > svg {
+.light-dark-mode > .dark > svg {
   stroke: var(--light);
 }

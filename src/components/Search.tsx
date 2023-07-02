@@ -7,10 +7,9 @@ export type SearchProps = {
 };
 
 export default function Search(props: SearchProps) {
-  // const [objects, setObjects] = useState(
-  //   JSON.parse(localStorage.getItem("objects") || "[]")
-  // );
-  const [filtered, setFiltered] = useState([]);
+  const [filtered, setFiltered] = useState(
+    JSON.parse(localStorage.getItem("objects") || "[]")
+  );
 
   useEffect(() => {
     props.func(filtered);
@@ -24,10 +23,13 @@ export default function Search(props: SearchProps) {
           item?.name?.toLowerCase().includes(e.target.value) ||
           item?.desc?.toLowerCase().includes(e.target.value)
       );
-      // console.log(filterResult);
-      setFiltered(filterResult);
+
+      if (filterResult.length > 0) {
+        setFiltered(filterResult);
+      } else {
+        setFiltered([]);
+      }
     } else {
-      //- [ ] SEARCH -when nothing found - show nothing, before typing - and when nothing is in input - show everythin
       setFiltered(objects);
     }
   };
