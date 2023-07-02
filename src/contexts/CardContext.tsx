@@ -14,7 +14,6 @@ export type ModalData = {
   name?: string;
   desc?: string;
   type?: string;
-  //   func?: () => void;
   func?: any;
   equipment?: string[];
   people?: string[];

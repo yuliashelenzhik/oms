@@ -7,30 +7,9 @@ export type ThemeContextType = {
   colors: {
     [key: string]: string;
   };
-
-  // typeof themeColors.dark;
-
-  // colors?: {
-  //   bgPrimary: string;
-  //   bgSecondary: string;
-  //   textPrimary: string;
-  //   textSecondary: string;
-  //   textTertiary: string;
-  //   test: string;
-  // };
 };
 
-// Define the theme colors
-// const themeColors: {
-//   [key: string]: {
-//     bgPrimary: string;
-//     bgSecondary: string;
-//     textPrimary: string;
-//     textSecondary: string;
-//     textTertiary: string;
-//     test: string;
-//   };
-// }
+//Define theme colors
 const themeColors: { [key: string]: ThemeContextType["colors"] } = {
   dark: {
     bgPrimary:
@@ -69,7 +48,6 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<{}>> = ({
 
   // Function to toggle the theme
   const toggleTheme = () => {
-    console.log("toggletheme");
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
 
