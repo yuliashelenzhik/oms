@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { ReactComponent as SearchIcon } from "../icons/search.svg";
+import { ModalData } from "../contexts/CardContext";
 
-export default function Search(props: any) {
+export type SearchProps = {
+  func: (filtered: ModalData[]) => void;
+};
+
+export default function Search(props: SearchProps) {
   // const [objects, setObjects] = useState(
   //   JSON.parse(localStorage.getItem("objects") || "[]")
   // );
@@ -11,7 +16,7 @@ export default function Search(props: any) {
     props.func(filtered);
   }, [filtered]);
 
-  const searchFilter = (e: any) => {
+  const searchFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     const objects = JSON.parse(localStorage.getItem("objects") || "[]");
     if (e.target.value.length > 0) {
       const filterResult = objects.filter(

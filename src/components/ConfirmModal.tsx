@@ -1,7 +1,7 @@
 import Button from "./Button";
 import "../styles/ConfirmModal.css";
 import { ReactComponent as CloseIcon } from "../icons/x.svg";
-import { ModalContext, ModalData } from "../contexts/CardContext";
+import { ModalContext } from "../contexts/CardContext";
 import { useContext } from "react";
 
 type ConfirmModalProps = {
@@ -10,8 +10,8 @@ type ConfirmModalProps = {
     id: number;
     assigned?: {}[];
   };
-  onClick?: any;
-  onConfirm?: any;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onConfirm?: () => void;
 };
 
 export default function ConfirmModal(props: ConfirmModalProps) {

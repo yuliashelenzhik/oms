@@ -13,7 +13,11 @@ import { ThemeContext, ThemeContextType } from "../contexts/ThemeContext";
 //   assigned: any[];
 // };
 
-export default function List(props: any) {
+export type ListProps = {
+  filtered: ModalData[];
+};
+
+export default function List(props: ListProps) {
   const { theme, colors } = useContext<ThemeContextType>(ThemeContext);
   const [selectedObject, setSelectedObject] = useState<ModalData>({
     id: null,
@@ -25,7 +29,7 @@ export default function List(props: any) {
   const [objects, setObjects] = useState([]);
   const { showModal, modalData } = useContext(ModalContext);
 
-  const openModal = (object: any) => {
+  const openModal = (object: ModalData) => {
     const data: ModalData = {
       id: object.id,
       name: object.name,

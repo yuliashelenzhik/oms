@@ -2,13 +2,14 @@ import Search from "./Search";
 import "../styles/Navbar.css";
 import { ReactComponent as LightIcon } from "../icons/sun.svg";
 import { ReactComponent as DarkIcon } from "../icons/moon.svg";
-import { ThemeContext } from "../contexts/ThemeContext";
+import { ThemeContext, ThemeContextType } from "../contexts/ThemeContext";
 import { useContext } from "react";
 
 export default function Navbar(props: any) {
-  const { theme, colors, toggleTheme } = useContext(ThemeContext);
+  const { theme, colors, toggleTheme } =
+    useContext<ThemeContextType>(ThemeContext);
 
-  const styles = {
+  const styles: React.CSSProperties = {
     color: colors.textPrimary,
   };
   return (
