@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Card from "../components/Card";
+// import Card from "../components/Card";
 import List from "../components/List";
 import Navbar from "../components/Navbar";
 import { useContext } from "react";
@@ -12,14 +12,7 @@ export default function MainScreen() {
   const getFiltered = (data: any) => {
     setFiltered(data);
   };
-  // const styles = {
-  //   backgroundImage: theme === "dark" ? "var(--bgPrimary)" : "var(--bgPrimary)",
-  //   color: theme === "dark" ? "var(--textPrimary)" : "var(--textPrimary)",
-  // };
-  // const styles = {
-  //   backgroundImage: "var(--bgPrimary)",
-  //   color: "var(--textPrimary)",
-  // };
+
   const styles = {
     backgroundImage: colors.bgPrimary,
   };

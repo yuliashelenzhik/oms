@@ -47,7 +47,8 @@
   /* background-color: greenyellow; */
   /* justify-content: flex-start; */
 }
-.add {
+.add-dark,
+.add-light {
   position: absolute;
   width: 36px;
   height: 36px;
@@ -58,8 +59,12 @@
   right: 12px;
   cursor: pointer;
 }
-.add > svg {
-  stroke: #291847;
+.add-dark > svg {
+  stroke: var(--dark);
+}
+
+.add-light > svg {
+  stroke: var(--medium);
 }
 .list-item-details {
   display: flex;

@@ -1,6 +1,8 @@
 import Button from "./Button";
 import "../styles/ConfirmModal.css";
 import { ReactComponent as CloseIcon } from "../icons/x.svg";
+import { ModalContext, ModalData } from "../contexts/CardContext";
+import { useContext } from "react";
 
 type ConfirmModalProps = {
   object: {
@@ -13,7 +15,7 @@ type ConfirmModalProps = {
 };
 
 export default function ConfirmModal(props: ConfirmModalProps) {
-  console.log(props);
+  const { hideModal } = useContext(ModalContext);
   const object = props.object;
   return (
     <div className="confirm-modal-bg">
@@ -25,7 +27,7 @@ export default function ConfirmModal(props: ConfirmModalProps) {
           {"?"}
         </p>
         <div className="buttons">
-          <Button title="cancel" />{" "}
+          <Button title="cancel" onClick={hideModal} />
           <Button title="confirm" onClick={props.onConfirm} />
         </div>
       </div>

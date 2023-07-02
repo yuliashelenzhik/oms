@@ -26,12 +26,6 @@ export default function Navbar(props: any) {
           </div>
         )}
       </div>
-      {/* <ul>
-        <li>Home</li>
-        <li>Equipment</li>
-        <li>People</li>
-        <li></li>
-      </ul> */}
     </nav>
   );
 }

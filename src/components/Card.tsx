@@ -1,28 +1,36 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, ChangeEvent } from "react";
 import "../styles/Card.css";
 import Button from "./Button";
 import ConfirmModal from "./ConfirmModal";
 import { ModalContext, ModalData } from "../contexts/CardContext";
+import { ThemeContext } from "../contexts/ThemeContext";
 
-type CardProps = {
+export type AssignedObject = {
   id: number;
-  name?: string;
-  desc?: string;
-  type?: string;
-  showCard?: any;
-  func?: any;
-  equipment?: Array<string>;
-  people?: Array<string>;
-  assigned?: Array<any>;
-  assignedTo?: Array<any>;
+  name: string;
 };
 
-export default function Card(props: CardProps) {
-  // const [showCard, setShowCard] = useState<Boolean>(props.showCard);
-  const [name, setName] = useState<any>(props.name ?? "");
-  const [id, setId] = useState<any>(props.id ?? 0);
-  const [description, setDescription] = useState<any>(props.desc ?? "");
-  const [type, setType] = useState<any>(props.type ?? "person");
+// type CardProps = {
+//   id?: number;
+//   name?: string;
+//   desc?: string;
+//   type?: string;
+//   func?: any;
+//   equipment?: string[];
+//   people?: string[];
+//   assigned?: AssignedObject[];
+//   assignedTo?: AssignedObject[];
+// };
+
+export default function Card(props: ModalData) {
+  const { theme } = useContext(ThemeContext);
+  const { hideModal, modalData } = useContext(ModalContext);
+
+  const [name, setName] = useState<string>(props.name ?? "");
+  const [id, setId] = useState<number>(props.id ?? null);
+  const [desc, setDesc] = useState<string>(props.desc ?? "");
+  const [type, setType] = useState<string>(props.type ?? "person");
+
   const [objects, setObjects] = useState(
     JSON.parse(localStorage.getItem("objects") || "[]")
   );
@@ -36,62 +44,48 @@ export default function Card(props: CardProps) {
       (item: any) => item.type === "person"
     )
   );
-  const [assigned, setAssigned] = useState(props.assigned ?? []);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const { hideModal, modalData } = useContext(ModalContext);
-
-  // useEffect(() => {
-  //   console.log("card props");
-  //   console.log(props);
-  // }, [props, showCard]);
-  // const [assigned, setAssigned] = useState(
-  //   equipment.map((item: any) => ({ ...item, checked: false }))
-  // );
-
-  // const [assigned, setAssigned] = useState(
-  //   new Array(equipment.length).fill({ checked: false })
-  // );
-
-  // const equipmentOptions = equipment.map((item: any) => {
-  //   return item.name;
-  // });
-
-  // useEffect(() => {
-  //   // console.log(props);
-  //   setShowCard(props.showCard);
-  // }, [props.showCard]);
-
-  // useEffect(() => {
-  //   console.log(assigned);
-  // }, [assigned]);
+  const [assigned, setAssigned] = useState<AssignedObject[]>(
+    props.assigned ?? []
+  );
+  const [assignedTo, setAssignedTo] = useState<AssignedObject[]>(
+    props.assigned ?? []
+  );
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
 
   const typeOptions = ["person", "computer", "desk", "keyboard"];
 
-  const onChangeName = (e: any) => {
+  const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
 
-  const onChangeDesc = (e: any) => {
-    setDescription(e.target.value);
+  const onChangeDesc = (e: ChangeEvent<HTMLInputElement>) => {
+    setDesc(e.target.value);
   };
 
-  const onChangeType = (e: any) => {
+  const onChangeType = (e: ChangeEvent<HTMLSelectElement>) => {
     setType(e.target.value);
   };
 
-  const onChangeAssigned = (data: any) => {
+  const onChangeAssigned = (data: AssignedObject) => {
     let res = assigned;
-    if (assigned.indexOf(data as never) < 0) {
-      res.push(data as never);
+
+    const foundAssignedObjectIndex = assigned.findIndex(
+      (item) => item.id === data.id
+    );
+
+    if (foundAssignedObjectIndex !== -1) {
+      // Remove from assigned array
+      console.log("FOUND, TO REMOVE");
+      res.splice(foundAssignedObjectIndex, 1);
+      console.log(res);
+      setAssigned(res);
     } else {
-      res.splice(res.indexOf(data as never), 1);
+      // Add to assigned array
+      console.log("NOT FOUND, TO ADD");
+      res.push(data);
+      console.log(res);
+      setAssigned(res);
     }
-    setAssigned(res);
-    console.log(res);
-    for (let item in res) {
-      console.log(res[item]);
-    }
-    //search all quipment by id, add to each array of people assigned
   };
 
   const onDelete = () => {
@@ -108,76 +102,52 @@ export default function Card(props: CardProps) {
       setObjects(res);
       localStorage.setItem("objects", JSON.stringify(res));
       props.func(objects);
-      // setShowCard(false);
       setShowConfirm(false);
       hideModal();
     }
   };
-  const onSave = () => {
-    let res = objects;
-    const foundObject = res.filter(
-      (item: any) => item.id === id && item.name === name
-    );
+  const onSave = (e: any) => {
+    //  TODO let users know the name is required
 
-    //Update the existing object
+    let res = [...objects];
+    const foundObjectIndex = res.findIndex((item) => item.id === id);
 
-    if (foundObject.length > 0) {
-      const itemToSave = {
-        id: foundObject[0].id,
-        name: name,
-        desc: description,
-        type: type,
-        // assigned: assigned,
-      };
-      res.splice(res.indexOf(foundObject[0]), 1);
-
-      if (name !== "") {
-        res.push(itemToSave);
-        setObjects(res);
-        localStorage.setItem("objects", JSON.stringify(res));
-        props.func(objects);
-        // setShowCard(false);
-        // props.showCard(false);
-      } else {
-        //TODO let users know the name is required
-      }
-    } else {
+    if (foundObjectIndex === -1) {
       // Add new object
-
-      const ids = objects.map((item: any) => {
+      const ids = res.map((item) => {
         return item.id;
       });
       const max = Math.max(...ids);
       const itemToSave = {
         id: max + 1,
         name: name,
-        desc: description,
+        desc: desc,
         type: type,
-        // assigned: assigned,
+        assigned: assigned,
       };
-      if (name !== "") {
-        res.push(itemToSave);
-        setObjects(res);
-        localStorage.setItem("objects", JSON.stringify(res));
-        props.func(objects);
-        hideModal();
-        // setShowCard(false);
-        // props.showCard(false);
-      } else {
-        //TODO let users know the name is required
-      }
+      res.push(itemToSave);
+      setObjects(res);
+      localStorage.setItem("objects", JSON.stringify(res));
+      props.func(objects);
+      hideModal();
+    } else {
+      //Update the existing object
+
+      const itemToSave = {
+        id: res[foundObjectIndex].id,
+        name: name,
+        desc: desc,
+        type: type,
+        assigned: assigned,
+      };
+
+      res[foundObjectIndex] = itemToSave;
+      setObjects(res);
+      localStorage.setItem("objects", JSON.stringify(res));
+      props.func(objects);
+      hideModal();
     }
   };
-
-  // function onCheckEquipment(position: any) {
-  //   let res = [];
-  //   // console.log()
-  //   // const updateAssigned = assigned.map((item: any, index: any) => {
-  //   //   return index === position ? !item : item;
-  //   // });
-  //   // // console.log(updateAssigned);
-  //   // setAssigned(updateAssigned);
-  // }
 
   if (modalData) {
     return (
@@ -193,7 +163,7 @@ export default function Card(props: CardProps) {
           </div>
           <div>
             <input
-              value={description}
+              value={desc}
               type="text"
               placeholder="Description"
               onChange={onChangeDesc}
@@ -262,7 +232,14 @@ export default function Card(props: CardProps) {
             </div>
           )}
 
-          <div className="card-btn-container">
+          <div
+            className={
+              theme === "dark"
+                ? "card-btn-container"
+                : "card-btn-container-light"
+            }
+          >
+            <Button title="Cancel" onClick={hideModal} />
             <Button title="Save" onClick={onSave} />
             <Button title="Delete" onClick={onDelete} />
           </div>

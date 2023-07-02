@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+import { AssignedObject } from "../components/Card";
 
 // Define the modal context type
 export type ModalContextType = {
@@ -9,15 +10,16 @@ export type ModalContextType = {
 
 // Define the modal data type
 export type ModalData = {
-  id: number;
+  id?: any;
   name?: string;
   desc?: string;
   type?: string;
-  func?: () => void;
+  //   func?: () => void;
+  func?: any;
   equipment?: string[];
   people?: string[];
-  assigned?: { id: number; name: string }[];
-  assignedTo?: { id: number; name: string }[];
+  assigned?: AssignedObject[];
+  assignedTo?: AssignedObject[];
 };
 
 // Create the initial context value

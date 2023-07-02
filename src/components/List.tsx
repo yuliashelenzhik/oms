@@ -1,67 +1,81 @@
 import { useContext, useEffect, useState } from "react";
 import { ReactComponent as AddIcon } from "../icons/plus-circle.svg";
-import { ReactComponent as EditIcon } from "../icons/edit-2.svg";
-import { ReactComponent as DeleteIcon } from "../icons/trash-2.svg";
 import Card from "./Card";
 import "../styles/List.css";
 import { ModalContext, ModalData } from "../contexts/CardContext";
+import { ThemeContext, ThemeContextType } from "../contexts/ThemeContext";
 
+// export type SelectedObject = {
+//   id: number | undefined;
+//   name: string;
+//   desc: string;
+//   type: string;
+//   assigned: any[];
+// };
 export default function List(props: any) {
-  const [selectedObject, setSelectedObject] = useState({
-    id: 0,
+  const { theme, colors } = useContext<ThemeContextType>(ThemeContext);
+  const [selectedObject, setSelectedObject] = useState<ModalData>({
+    id: null,
     name: "",
     desc: "",
     type: "person",
+    assigned: [],
   });
-  // const [showCard, setShowCard] = useState<Boolean>(false);
   const [objects, setObjects] = useState([]);
-  const { showModal, hideModal, modalData } = useContext(ModalContext);
+  const { showModal, modalData } = useContext(ModalContext);
 
   const openModal = (object: any) => {
-    console.log("openModal");
-    console.log(object);
-
     const data: ModalData = {
       id: object.id,
       name: object.name,
       desc: object.desc,
       type: object.type,
+      assigned: object.assigned,
     };
-    // console.log(data);
     showModal(data);
   };
 
-  // const closeModal = () => {
-  //   hideModal();
-  // };
-
+  useEffect(() => {
+    console.log("selectedObject");
+    console.log(selectedObject);
+  }, [selectedObject]);
   useEffect(() => {
     setObjects(JSON.parse(localStorage.getItem("objects") || "[]"));
   }, [modalData]);
 
   const getDataFromChild = (data: any) => {
     setObjects(data);
-    // console.log(showCard);
   };
 
   const onAdd = () => {
     setSelectedObject({
-      id: 0,
+      id: null,
       name: "",
       desc: "",
       type: "person",
+      assigned: [],
     });
     showModal(selectedObject);
-    // setShowCard(true);
   };
 
+  console.log(modalData);
   return (
     <div className="list-container">
-      <div className="add" onClick={onAdd}>
+      <div
+        className={theme === "dark" ? "add-dark" : "add-light"}
+        onClick={onAdd}
+      >
         <AddIcon />
       </div>
       <div className="list-headers-container">
-        <div className="list-headers">
+        <div
+          className="list-headers"
+          style={
+            theme === "light"
+              ? { color: colors.textTertiary }
+              : { color: colors.textSecondary }
+          }
+        >
           <p>Name</p>
           <p>Description</p>
           <p>Type</p>
@@ -78,39 +92,28 @@ export default function List(props: any) {
               onClick={() => {
                 setSelectedObject(item);
                 openModal(item);
-                // setShowCard(true);
-                // console.log("onclick");
-                // console.log(showCard);
               }}
             >
-              <div className="list-item-details">
+              <div
+                className="list-item-details"
+                style={{ color: colors.textPrimary }}
+              >
                 <p>{item.name.toLowerCase()}</p>
                 <p>{item.desc.toLowerCase()}</p>
                 <p>{item.type.toLowerCase()}</p>
               </div>
-              {/* <div className="list-item-edit">
-              <div className="edit">
-                <EditIcon />
-              </div>
-              <div className="delete">
-                <DeleteIcon />
-              </div>
-            </div> */}
             </div>
           );
         })}
       {modalData && (
-        // <div className="card-container">
         <Card
-          // showCard={showCard}
           func={getDataFromChild}
           id={selectedObject.id}
           name={selectedObject.name}
           desc={selectedObject.desc}
           type={selectedObject.type}
-          // showCard={true}
+          assigned={selectedObject.assigned}
         />
-        // </div>
       )}
     </div>
   );

@@ -40,12 +40,19 @@
   color: var(--dark-transp);
 }
 
-.card-btn-container {
+.card-btn-container,
+.card-btn-container-light {
   margin: auto;
   display: flex;
   gap: 24px;
 }
 
+.card-btn-container-light > div {
+  color: var(--medium);
+}
+.card-btn-container > div {
+  color: var(--dark);
+}
 .card-container {
   position: fixed;
   top: 0;
