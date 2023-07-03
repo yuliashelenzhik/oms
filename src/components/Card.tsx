@@ -32,7 +32,7 @@ export default function Card(props: ModalData) {
     (item: any) => item.type === "person"
   );
 
-  const [assigned2, setAssigned2] = useState<any>(props.assigned ?? []);
+  const [assigned2, setAssigned2] = useState<{}[]>(props.assigned ?? []);
 
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
 
@@ -85,7 +85,7 @@ export default function Card(props: ModalData) {
       let foundAssigned = res.find(
         (item: any) => item.id === foundObjectAssigned[i]
       ).assigned;
-      let updatedAssigned = foundAssigned.filter((i: any) => i !== id);
+      let updatedAssigned = foundAssigned.filter((i: number) => i !== id);
 
       let updatedObject = {
         id: found.id,
@@ -139,7 +139,7 @@ export default function Card(props: ModalData) {
       let foundAssigned = found.assigned;
 
       //if id in foundAssigned, remove
-      const isIn = foundAssigned.some((i: any) => i === id);
+      const isIn = foundAssigned.some((i: number) => i === id);
       if (!isIn) {
         foundAssigned.push(id);
         const updatedObject = {
@@ -155,7 +155,7 @@ export default function Card(props: ModalData) {
         props.func(objects);
         hideModal();
       } else {
-        let filteredAssigned = foundAssigned.filter((i: any) => i !== id);
+        let filteredAssigned = foundAssigned.filter((i: number) => i !== id);
         const updatedObject = {
           id: found.id,
           name: found.name,
@@ -254,7 +254,7 @@ export default function Card(props: ModalData) {
             <div className="relations">
               <p>Assigned</p>
               <div className="checkbox-container">
-                {equipment.map((item: any, index: number) => {
+                {equipment.map((item: any) => {
                   const checked = props.assigned?.some((id) => id === item.id);
                   return (
                     <div key={item.id}>
@@ -283,7 +283,7 @@ export default function Card(props: ModalData) {
                         value={item}
                         defaultChecked={
                           item.assigned !== undefined &&
-                          item.assigned.some((i: any) => i === modalData.id)
+                          item.assigned.some((i: number) => i === modalData.id)
                         }
                         onChange={() => onChangeAssigned(item)}
                       />
@@ -310,7 +310,9 @@ export default function Card(props: ModalData) {
         {showConfirm && (
           <ConfirmModal
             object={{ name: name, id: id, assigned: assigned2 }}
-            onClick={(e: any) => e.stopPropagation()}
+            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+              e.stopPropagation()
+            }
             onConfirm={onConfirm}
           />
         )}
