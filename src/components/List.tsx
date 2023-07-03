@@ -18,7 +18,7 @@ export default function List(props: ListProps) {
     type: "person",
     assigned: [],
   });
-  const [objects, setObjects] = useState([]);
+  const [objects, setObjects] = useState<{}[]>([]);
   const { showModal, modalData, hideModal } = useContext(ModalContext);
   const openModal = (object: ModalData) => {
     const data: ModalData = {
@@ -35,13 +35,7 @@ export default function List(props: ListProps) {
     setObjects(JSON.parse(localStorage.getItem("objects") || "[]"));
   }, [modalData]);
 
-  useEffect(() => {
-    console.log(objects);
-    console.log(props.filtered);
-  }, [objects]);
-
   const getDataFromChild = (data: any) => {
-    console.log(data);
     setObjects(data);
   };
 
@@ -55,6 +49,9 @@ export default function List(props: ListProps) {
     });
     showModal(selectedObject);
   };
+
+  // console.log(props.filtered);
+  // console.log(objects);
 
   return (
     <div className="list-container">
@@ -95,8 +92,16 @@ export default function List(props: ListProps) {
                 className="list-item-details"
                 style={{ color: colors.textPrimary }}
               >
-                <p>{item.name.toLowerCase()}</p>
-                <p>{item.desc?.toLowerCase()}</p>
+                <p>
+                  {item.name.length > 15
+                    ? item.name.substring(0, 15).toLowerCase() + "..."
+                    : item.name.toLowerCase()}
+                </p>
+                <p>
+                  {item.desc?.length > 15
+                    ? item.desc?.substring(0, 15).toLowerCase() + "..."
+                    : item.desc?.toLowerCase()}
+                </p>
                 <p>{item.type?.toLowerCase()}</p>
               </div>
             </div>

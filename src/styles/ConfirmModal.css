@@ -5,11 +5,7 @@
   background-color: #00000054;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  /* background-color: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0)
-  ); */
+  z-index: 3;
 }
 .confirm-modal-container {
   position: absolute;
@@ -29,15 +25,6 @@
   line-height: 24px;
 }
 
-.confirm-modal-container > svg {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  stroke: #291847;
-  height: 24px;
-  width: 24px;
-  cursor: pointer;
-}
 .confirm-modal-container > .buttons {
   padding-top: 24px;
   display: flex;
@@ -48,4 +35,10 @@
 .confirm-modal-container > p > span {
   text-transform: uppercase;
   color: #b44960;
+}
+
+@media (max-width: 414px) {
+  .confirm-modal-container {
+    width: calc(100% - 48px);
+  }
 }

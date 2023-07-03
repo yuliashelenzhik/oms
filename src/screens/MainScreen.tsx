@@ -11,6 +11,8 @@ export default function MainScreen() {
 
   const getFiltered = (data: any) => {
     setFiltered(data);
+    console.log("filtered in main");
+    console.log(filtered);
   };
 
   const styles = {

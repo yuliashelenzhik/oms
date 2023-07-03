@@ -99,9 +99,13 @@ export default function Card(props: ModalData) {
     let res = objects;
 
     const foundObject = res.find((item: any) => item.id === id);
-    const foundObjectAssigned = foundObject.assigned;
+    const foundObjectAssigned = foundObject?.assigned;
 
     res.splice(res.indexOf(foundObject), 1);
+    setObjects(res);
+    localStorage.setItem("objects", JSON.stringify(res));
+    props.func(objects);
+    hideModal();
 
     for (let i in foundObjectAssigned) {
       let found = res.find((item: any) => item.id === foundObjectAssigned[i]);
@@ -136,6 +140,7 @@ export default function Card(props: ModalData) {
       onUpdate();
     }
   };
+
   const onUpdate = () => {
     let res = [...objects];
 
@@ -210,6 +215,7 @@ export default function Card(props: ModalData) {
     };
 
     res.push(itemToSave);
+    props.func(res);
 
     //add relations
     for (let i in assigned2) {

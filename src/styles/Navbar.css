@@ -69,3 +69,22 @@ nav {
 .light-dark-mode > .dark > svg {
   stroke: var(--light);
 }
+
+@media (max-width: 414px) {
+  nav {
+    padding: 24px;
+    font-size: smaller;
+  }
+  .search-container {
+    width: fit-content;
+    margin-right: 6px;
+    margin-left: 6px;
+  }
+  .search {
+    width: fit-content;
+    gap: 6px;
+  }
+  .light-dark-mode {
+    padding: 6px 12px;
+  }
+}

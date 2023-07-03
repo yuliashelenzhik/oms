@@ -1,6 +1,5 @@
 import Button from "./Button";
 import "../styles/ConfirmModal.css";
-import { ReactComponent as CloseIcon } from "../icons/x.svg";
 import { ModalContext } from "../contexts/CardContext";
 import { useContext } from "react";
 
@@ -20,7 +19,6 @@ export default function ConfirmModal(props: ConfirmModalProps) {
   return (
     <div className="confirm-modal-bg">
       <div className="confirm-modal-container" onClick={props.onClick}>
-        <CloseIcon />
         <p>
           {"Are you sure you want to remove the object "}
           <span>{object.name}</span>
