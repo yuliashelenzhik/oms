@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, ChangeEvent } from "react";
+import { useContext, useState, ChangeEvent } from "react";
 import "../styles/Card.css";
 import Button from "./Button";
 import ConfirmModal from "./ConfirmModal";
@@ -18,22 +18,18 @@ export default function Card(props: ModalData) {
   const { hideModal, modalData } = useContext(ModalContext);
 
   const [name, setName] = useState<string>(props.name ?? "");
-  const [id, setId] = useState<number>(props.id ?? null);
   const [desc, setDesc] = useState<string>(props.desc ?? "");
   const [type, setType] = useState<string>(props.type ?? "person");
+  const id = props.id ?? null;
 
   const [objects, setObjects] = useState(
     JSON.parse(localStorage.getItem("objects") || "[]")
   );
-  const [equipment, setEquipment] = useState(
-    JSON.parse(localStorage.getItem("objects") || "[]").filter(
-      (item: any) => item.type !== "person"
-    )
+  const equipment = JSON.parse(localStorage.getItem("objects") || "[]").filter(
+    (item: any) => item.type !== "person"
   );
-  const [people, setPeople] = useState(
-    JSON.parse(localStorage.getItem("objects") || "[]").filter(
-      (item: any) => item.type === "person"
-    )
+  const people = JSON.parse(localStorage.getItem("objects") || "[]").filter(
+    (item: any) => item.type === "person"
   );
 
   const [assigned2, setAssigned2] = useState<any>(props.assigned ?? []);

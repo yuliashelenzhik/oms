@@ -20,7 +20,7 @@ export default function List(props: ListProps) {
   });
   const [objects, setObjects] = useState<{}[]>([]);
   const [filtered, setFiltered] = useState<{}[]>(props.filtered);
-  const { showModal, modalData, hideModal } = useContext(ModalContext);
+  const { showModal, modalData } = useContext(ModalContext);
   const openModal = (object: ModalData) => {
     const data: ModalData = {
       id: object.id,
