@@ -7,7 +7,6 @@ import { ThemeContext, ThemeContextType } from "../contexts/ThemeContext";
 
 export type ListProps = {
   filtered: ModalData[];
-  noResult?: boolean;
 };
 
 export default function List(props: ListProps) {
@@ -20,8 +19,7 @@ export default function List(props: ListProps) {
     assigned: [],
   });
   const [objects, setObjects] = useState([]);
-  const { showModal, modalData } = useContext(ModalContext);
-
+  const { showModal, modalData, hideModal } = useContext(ModalContext);
   const openModal = (object: ModalData) => {
     const data: ModalData = {
       id: object.id,
@@ -37,7 +35,13 @@ export default function List(props: ListProps) {
     setObjects(JSON.parse(localStorage.getItem("objects") || "[]"));
   }, [modalData]);
 
+  useEffect(() => {
+    console.log(objects);
+    console.log(props.filtered);
+  }, [objects]);
+
   const getDataFromChild = (data: any) => {
+    console.log(data);
     setObjects(data);
   };
 
