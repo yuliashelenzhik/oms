@@ -5,8 +5,6 @@ export const themes = {
     secondary: "#e7cecd",
     secondaryTransp: "#e7cecd54",
     tertiary: "#b44960",
-    // bgGradient:
-    //   "linear-gradient(to right bottom, #291847, #4e2154, #722b5c, #953860,#b44960);",
   },
   light: {
     primary: "#e7cecd",
@@ -14,7 +12,5 @@ export const themes = {
     secondary: "#291847",
     secondaryTransp: "#e7cecd54",
     tertiary: "#b44960",
-    // bgGradient:
-    //   "linear-gradient(to right bottom, #291847, #4e2154, #722b5c, #953860,#b44960);",
   },
 };

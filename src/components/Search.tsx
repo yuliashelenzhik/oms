@@ -13,8 +13,6 @@ export default function Search(props: SearchProps) {
 
   useEffect(() => {
     props.func(filtered);
-    console.log("filtered in search");
-    console.log(filtered);
   }, [filtered]);
 
   const searchFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,11 +26,14 @@ export default function Search(props: SearchProps) {
 
       if (filterResult.length > 0) {
         setFiltered(filterResult);
+        props.func(filtered);
       } else {
         setFiltered([]);
+        props.func(filtered);
       }
     } else {
       setFiltered(objects);
+      props.func(filtered);
     }
   };
 

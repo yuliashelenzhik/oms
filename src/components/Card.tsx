@@ -5,10 +5,6 @@ import ConfirmModal from "./ConfirmModal";
 import { ModalContext, ModalData } from "../contexts/CardContext";
 import { ThemeContext } from "../contexts/ThemeContext";
 
-// export type AssignedObject = {
-//   id: number;
-// };
-
 export type AssignedObject = {
   id: number;
   name: string;
@@ -39,9 +35,6 @@ export default function Card(props: ModalData) {
       (item: any) => item.type === "person"
     )
   );
-  // const [assigned, setAssigned] = useState<AssignedObject[]>(
-  //   props.assigned ?? []
-  // );
 
   const [assigned2, setAssigned2] = useState<any>(props.assigned ?? []);
 
@@ -73,22 +66,6 @@ export default function Card(props: ModalData) {
       res.push(data.id);
     }
     setAssigned2(res);
-
-    // let res = assigned;
-    // const foundAssignedObjectIndex = assigned.findIndex(
-    //   (item) => item.id === data.id
-    // );
-
-    // if (foundAssignedObjectIndex !== -1) {
-    //   // Remove from assigned array
-    //   res.splice(foundAssignedObjectIndex, 1);
-    //   // setAssigned(res.map((value) => value.id));
-    //   // setAssigned(res);
-    // } else {
-    //   // Add to assigned array
-    //   res.push(data);
-    //   setAssigned(res);
-    // }
   };
 
   const onDelete = () => {
@@ -336,7 +313,6 @@ export default function Card(props: ModalData) {
         </div>
         {showConfirm && (
           <ConfirmModal
-            // object={props.}
             object={{ name: name, id: id, assigned: assigned2 }}
             onClick={(e: any) => e.stopPropagation()}
             onConfirm={onConfirm}

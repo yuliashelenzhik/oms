@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import Card from "../components/Card";
 import List from "../components/List";
 import Navbar from "../components/Navbar";
 import { useContext } from "react";
@@ -11,8 +10,6 @@ export default function MainScreen() {
 
   const getFiltered = (data: any) => {
     setFiltered(data);
-    console.log("filtered in main");
-    console.log(filtered);
   };
 
   const styles = {
@@ -23,7 +20,6 @@ export default function MainScreen() {
     <div className="main-screen" style={styles}>
       <Navbar func={getFiltered} />
       <List filtered={filtered} />
-      {/* {showCard && <Card />} */}
     </div>
   );
 }
