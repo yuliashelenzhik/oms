@@ -131,6 +131,7 @@ export default function Card(props: ModalData) {
     setObjects(res);
     localStorage.setItem("objects", JSON.stringify(res));
     props.func(objects);
+    hideModal();
 
     //Check other relations
 
@@ -145,7 +146,7 @@ export default function Card(props: ModalData) {
         const updatedObject = {
           id: found.id,
           name: found.name,
-          desc: found.decs,
+          desc: found.desc,
           type: found.type,
           assigned: foundAssigned,
         };
@@ -159,7 +160,7 @@ export default function Card(props: ModalData) {
         const updatedObject = {
           id: found.id,
           name: found.name,
-          desc: found.decs,
+          desc: found.desc,
           type: found.type,
           assigned: filteredAssigned,
         };
@@ -200,7 +201,7 @@ export default function Card(props: ModalData) {
       const itemToUpdate = {
         id: found.id,
         name: found.name,
-        desc: found.decs,
+        desc: found.desc,
         type: found.type,
         assigned: foundAssigned,
       };

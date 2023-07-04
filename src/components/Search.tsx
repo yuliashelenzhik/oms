@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ReactComponent as SearchIcon } from "../icons/search.svg";
-import { ModalData } from "../contexts/CardContext";
+// import { ModalData } from "../contexts/CardContext";
 
 export type SearchProps = {
   func: (filtered: any[]) => void;
