@@ -8,6 +8,8 @@ export default function MainScreen() {
   const { colors } = useContext<ThemeContextType>(ThemeContext);
   const [filtered, setFiltered] = useState([]);
 
+  // Function that gets data from child components (Navbar and Search inside Navbar)
+
   const getFiltered = (data: any) => {
     setFiltered(data);
   };

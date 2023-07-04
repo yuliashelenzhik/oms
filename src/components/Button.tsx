@@ -6,6 +6,8 @@ type ButtonProps = {
   onClick?: (event: MouseEvent<HTMLDivElement>) => void;
 };
 
+//Default button component
+
 export default function Button(props: ButtonProps) {
   return (
     <div className="button" onClick={props.onClick}>

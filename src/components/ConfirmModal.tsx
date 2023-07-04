@@ -13,6 +13,8 @@ type ConfirmModalProps = {
   onConfirm?: () => void;
 };
 
+//Confirm deletion modal, opens when press "delete"
+
 export default function ConfirmModal(props: ConfirmModalProps) {
   const { hideModal } = useContext(ModalContext);
   const object = props.object;

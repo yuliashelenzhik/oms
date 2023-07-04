@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
 import { ReactComponent as SearchIcon } from "../icons/search.svg";
-// import { ModalData } from "../contexts/CardContext";
 
 export type SearchProps = {
   func: (filtered: any[]) => void;
 };
 
 const Search: React.FC<SearchProps> = ({ func }) => {
-  // export default function Search(props: SearchProps) {
   const [filtered, setFiltered] = useState(
     JSON.parse(localStorage.getItem("objects") || "[]")
   );
 
+  //Update data in parent component every time filter input changes
+
   useEffect(() => {
     func(filtered);
   }, [filtered, func]);
+
+  //Filter function (by object name or description)
 
   const searchFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     const objects = JSON.parse(localStorage.getItem("objects") || "[]");

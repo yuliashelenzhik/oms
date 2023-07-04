@@ -12,6 +12,8 @@ export default function Navbar(props: any) {
   const styles: React.CSSProperties = {
     color: colors.textPrimary,
   };
+
+  //Navigation bar component, includes "Search" component and the button to switch color themes (dark/light), state manages through context
   return (
     <nav style={styles}>
       <h3>OMS</h3>

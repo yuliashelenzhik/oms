@@ -13,15 +13,15 @@ export type AssignedObject = {
   assigned?: number[] | undefined;
 };
 
+//Card component
+
 export default function Card(props: ModalData) {
   const { theme } = useContext(ThemeContext);
   const { hideModal, modalData } = useContext(ModalContext);
-
   const [name, setName] = useState<string>(props.name ?? "");
   const [desc, setDesc] = useState<string>(props.desc ?? "");
   const [type, setType] = useState<string>(props.type ?? "person");
   const id = props.id ?? null;
-
   const [objects, setObjects] = useState(
     JSON.parse(localStorage.getItem("objects") || "[]")
   );
@@ -31,25 +31,23 @@ export default function Card(props: ModalData) {
   const people = JSON.parse(localStorage.getItem("objects") || "[]").filter(
     (item: any) => item.type === "person"
   );
-
   const [assigned2, setAssigned2] = useState<{}[]>(props.assigned ?? []);
-
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
 
+  //Options of types
   const typeOptions = ["person", "computer", "desk", "keyboard"];
+
+  //Actions when the card info is changing
 
   const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
-
   const onChangeDesc = (e: ChangeEvent<HTMLInputElement>) => {
     setDesc(e.target.value);
   };
-
   const onChangeType = (e: ChangeEvent<HTMLSelectElement>) => {
     setType(e.target.value);
   };
-
   const onChangeAssigned = (data: AssignedObject) => {
     let res = assigned2;
 
@@ -64,9 +62,13 @@ export default function Card(props: ModalData) {
     setAssigned2(res);
   };
 
+  //Actions on deleting, saving or updating the card
+
   const onDelete = () => {
     setShowConfirm(true);
   };
+
+  //Pressed on the child confirm modal, passed through props
 
   const onConfirm = () => {
     let res = objects;
@@ -103,6 +105,8 @@ export default function Card(props: ModalData) {
     }
   };
 
+  //Define if the object exits, choose to add it or to update it
+
   const saveOrUpdate = () => {
     let res = [...objects];
     const foundObjectIndex = res.findIndex((item) => item.id === id);
@@ -126,6 +130,7 @@ export default function Card(props: ModalData) {
     };
 
     //Update the card object
+
     let objIndex = res.findIndex((i: any) => i.id === id);
     res[objIndex] = updatedObject;
     setObjects(res);
@@ -139,7 +144,7 @@ export default function Card(props: ModalData) {
       let found = res.find((j: any) => j.id === assigned2[i]);
       let foundAssigned = found.assigned;
 
-      //if id in foundAssigned, remove
+      //If id in foundAssigned, remove
       const isIn = foundAssigned.some((i: number) => i === id);
       if (!isIn) {
         foundAssigned.push(id);
@@ -174,6 +179,8 @@ export default function Card(props: ModalData) {
     }
   };
 
+  // When the item is not saved, add it
+
   const onSave = () => {
     let res = [...objects];
     const ids = res.map((item) => {
@@ -191,7 +198,7 @@ export default function Card(props: ModalData) {
     res.push(itemToSave);
     props.func(res);
 
-    //add relations
+    //Add relations
     for (let i in assigned2) {
       let found = res.find((j: any) => j.id === assigned2[i]);
       let foundAssigned = found.assigned;
@@ -214,6 +221,8 @@ export default function Card(props: ModalData) {
     props.func(res);
     hideModal();
   };
+
+  //Rendering the card
 
   if (modalData) {
     return (
