@@ -9,6 +9,8 @@ export type ListProps = {
   filtered: ModalData[];
 };
 
+// List component, where we see all the added objects, their description and type, as well as the button to add a new object
+
 export default function List(props: ListProps) {
   const { theme, colors } = useContext<ThemeContextType>(ThemeContext);
   const [selectedObject, setSelectedObject] = useState<ModalData>({
@@ -32,21 +34,31 @@ export default function List(props: ListProps) {
     showModal(data);
   };
 
+  //Getting objects from local storage
+
   useEffect(() => {
     setObjects(JSON.parse(localStorage.getItem("objects") || "[]"));
   }, [modalData]);
+
+  //Function to get data from child component (Card.tsx)
 
   const getDataFromChild = (data: any) => {
     setObjects(data);
   };
 
+  //Rerender objects on object changes in other components
+
   useEffect(() => {
     setFiltered(objects);
   }, [objects]);
 
+  //Rerender objects when filter
+
   useEffect(() => {
     setFiltered(props.filtered);
   }, [props.filtered]);
+
+  //Action when "add" button is pressed
 
   const onAdd = () => {
     setSelectedObject({
@@ -99,16 +111,16 @@ export default function List(props: ListProps) {
                 style={{ color: colors.textPrimary }}
               >
                 <p>
-                  {item.name.length > 15
-                    ? item.name.substring(0, 15).toLowerCase() + "..."
-                    : item.name.toLowerCase()}
+                  {item.name?.length > 15
+                    ? item.name?.substring(0, 15).toLowerCase() + "..."
+                    : item.name?.toLowerCase()}
                 </p>
                 <p>
                   {item.desc?.length > 15
                     ? item.desc?.substring(0, 15).toLowerCase() + "..."
                     : item.desc?.toLowerCase()}
                 </p>
-                <p>{item.type?.toLowerCase()}</p>
+                <p>{item?.type?.toLowerCase()}</p>
               </div>
             </div>
           );

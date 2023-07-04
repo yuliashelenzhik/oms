@@ -1,3 +1,5 @@
+// Theme colors
+
 export const themes = {
   dark: {
     primary: "#291847",
