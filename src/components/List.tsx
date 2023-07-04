@@ -42,7 +42,11 @@ export default function List(props: ListProps) {
 
   useEffect(() => {
     setFiltered(objects);
-  }, [objects, filtered]);
+  }, [objects]);
+
+  useEffect(() => {
+    setFiltered(props.filtered);
+  }, [props.filtered]);
 
   const onAdd = () => {
     setSelectedObject({
@@ -78,7 +82,7 @@ export default function List(props: ListProps) {
         </div>
       </div>
 
-      {(props.filtered.length > 0 ? props.filtered : [])
+      {(filtered.length > 0 ? filtered : [])
         .sort((a: any, b: any) => (a.id > b.id ? 1 : -1))
         .map((item: any, index: number) => {
           return (
