@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { ThemeContext, ThemeContextType } from "../contexts/ThemeContext";
 
 export default function MainScreen() {
-  const { theme, colors } = useContext<ThemeContextType>(ThemeContext);
+  const { colors } = useContext<ThemeContextType>(ThemeContext);
   const [filtered, setFiltered] = useState([]);
 
   const getFiltered = (data: any) => {

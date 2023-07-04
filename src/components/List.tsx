@@ -19,8 +19,8 @@ export default function List(props: ListProps) {
     assigned: [],
   });
   const [objects, setObjects] = useState<{}[]>([]);
-  const [filtered, setFiltered] = useState<{}[]>(props.filtered);
-  const { showModal, modalData, hideModal } = useContext(ModalContext);
+  const [filtered, setFiltered] = useState<{}[]>([props.filtered]);
+  const { showModal, modalData } = useContext(ModalContext);
   const openModal = (object: ModalData) => {
     const data: ModalData = {
       id: object.id,
@@ -42,7 +42,7 @@ export default function List(props: ListProps) {
 
   useEffect(() => {
     setFiltered(objects);
-  }, [objects]);
+  }, [objects, filtered]);
 
   const onAdd = () => {
     setSelectedObject({
@@ -78,7 +78,7 @@ export default function List(props: ListProps) {
         </div>
       </div>
 
-      {(filtered.length > 0 ? filtered : [])
+      {(props.filtered.length > 0 ? props.filtered : [])
         .sort((a: any, b: any) => (a.id > b.id ? 1 : -1))
         .map((item: any, index: number) => {
           return (
